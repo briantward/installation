@@ -45,12 +45,12 @@
   when: launcher_sso_exists_cmd.rc != 0
 
 - name: "Verify Launcher SSO deployment succeeded"
-  shell: sleep 5; oc get pods --namespace {{ launcher_namespace }}  |  grep  "deploy"
+  shell: sleep 5; oc get pods --namespace {{ launcher_namespace }}  |  grep launcher-sso-[0-9]*- | grep Running | grep 1/1
   register: result
-  until: not result.stdout
+  until: result.stdout
   retries: 50
   delay: 10
-  failed_when: result.stdout
+  failed_when: not result.stdout
   changed_when: False
 
 - name: Retrieve launcher SSO Admin Password
